@@ -1,6 +1,7 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { EmailAddress } from '../value-objects/email-address.value-object';
+import { UserCreatedEvent } from '../events/user-created.event';
 
 @Entity('users')
 export class User extends AggregateRoot {
@@ -15,5 +16,9 @@ export class User extends AggregateRoot {
 
   constructor() {
     super();
+  }
+
+  onCreation() {
+    this.apply(new UserCreatedEvent(this.id));
   }
 }
